@@ -1,0 +1,51 @@
+/************************  FORMS  **************************************/
+
+
+form[name ="signin"],
+form[name="register"] {
+    position: relative;
+}
+
+form[name="signin"] {
+    width: 20%;
+}
+
+form[name="register"] {
+    width: 16%;
+}
+
+form[name ="signin"] input,
+form[name="register"] input:not([name="age"], [name="politic"]) {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+}
+
+form[name="register"] input[name="age"] {
+    margin-left: 42px;
+}
+
+form[name ="signin"] div,
+form[name="register"] div {
+    margin-bottom: 10px;
+}
+
+
+/************************  TABLE  **************************************/
+
+
+.account_data, .account_data td, .account_data th {
+    border: 1px solid black;
+}
+
+.account_data {
+    border-collapse: collapse;
+}
+
+.account_data td, .account_data th {
+    padding: 15px;
+}
+
+.account_data {
+    margin-bottom: 10px;
+}
