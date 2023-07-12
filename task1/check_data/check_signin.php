@@ -8,11 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = 'SELECT `password` FROM `users` WHERE `login` = :u_login';
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute([':u_login' => $_POST['login']]);
-        if (password_verify($_POST['password'], $stmt->fetch()['password'])) {
+        if ($stmt->rowCount() && password_verify($_POST['password'], $stmt->fetch()['password'])) {
             $_SESSION['login'] = $_POST['login'];
-            header('Location: account.php');
+            header('Location: ../pages/account.php');
         } else {
-            echo "<h1>Некорректний лонін або пароль! Спробуйте ще раз</h1>";
+            echo "<h1>Некорректний логін або пароль! Спробуйте ще раз</h1>";
             echo "<a href='../pages/index.php'>Повернутись на головну</a>";
             exit;
         }

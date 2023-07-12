@@ -11,40 +11,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conn = new PDO("mysql: host=$servername; dbname=$dbname", $username, $password, $opt);
 
-        if (
-            strlen($_POST['email']) >= 4 &&
-            strlen($_POST['email']) <= 256 &&
-            preg_match($pattern_email, $_POST['email']) == 0 &&
-            substr_count($_POST['email'], '@') == 1
-        ) {
-            $sql = "SELECT `email` FROM `users` WHERE `email` = :email"; // зпис з БД по $_POST['email']]
-            $stmt = $conn->prepare($sql);
-            $row = $stmt->execute([':email' => $_POST['email']]);
+        if (!isset($_GET['upd'])) {
+            if (strlen($_POST['email']) >= 4 &&
+                strlen($_POST['email']) <= 256 &&
+                preg_match($pattern_email, $_POST['email']) == 0 &&
+                substr_count($_POST['email'], '@') == 1
+            ) {
+                $sql = "SELECT `email` FROM `users` WHERE `email` = :email";
+                $stmt = $conn->prepare($sql);
+                $row = $stmt->execute([':email' => $_POST['email']]);
 
-            if (isset($_GET['upd'])) {
-                $sql_upd = "SELECT `email` FROM `users` WHERE `login` = :login"; // запис з БД по $_SESSION['login']]
-                $stmt_upd = $conn->prepare($sql_upd);
-                $row_upd = $stmt_upd->execute([':login' => $_SESSION['login']]);
-            }
+                if ($stmt->rowCount() == 0)
+                    $user_email = $_POST['email'];
+                else {
+                    echo "<h1>Користувач з такою поштою вже зареєстрований!</h1>";
+                    echo "<a href='../pages/index.php'>На головну</a>";
+                    exit;
+                }
 
-            if (($stmt->rowCount() == 0 && !isset($_GET['upd'])) || //новий користувач
-                ($stmt->rowCount() == 1 && isset($_GET['upd']) && $stmt->fetch()['email'] == $stmt_upd->fetch()['email'])) // редагування
-                $user_email = $_POST['email'];
-            elseif (($stmt->rowCount() == 1 && !isset($_GET['upd'])) || // пошта зайнята (для нового користувача)
-                ($stmt->rowCount() == 1 && isset($_GET['upd']) && $stmt->fetch()['email'] != $stmt_upd->fetch()['email'])) { // пошта зайнята (для користувача, який редагує профіль. Пошти не співпадають)
-                echo "<h1>Користувач з такою поштою вже зареєстрований!</h1>";
-                echo "<a href='../pages/index.php'>На головну</a>";
-                exit;
-            } elseif ($stmt->rowCount() == 0 && isset($_GET['upd'])) { // зміна пошти при редагуванні
-                echo "<h1>Неможливо редагувати пошту!</h1>";
-                echo "<a href='../pages/form_register.php?upd=1'>До реєстрації</a>";
+            } else {
+                echo "<h1>Некорректна пошта! Спробуйте ще раз</h1>";
+                echo "<a href='../pages/form_register.php'>До реєстрації</a>";
                 exit;
             }
-
-        } else {
-            echo "<h1>Некорректна пошта! Спробуйте ще раз</h1>";
-            header_to_register();
-            exit;
         }
 
 
@@ -70,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (strlen($_POST['surname']) >= 4 && strlen($_POST['surname']) <= 30 && preg_match($pattern_name, $_POST['surname']) == 0)
             $user_surname = $_POST['surname'];
         else {
-
             echo "<h1>Некорректне прізвище! Спробуйте ще раз</h1>";
             echo "<h4><span style='color: red'>Перевірте, чи Ваше прізвище не містить недопустимих символів (цифри, пробіли, знаки пунктуації, тощо).</span></h4>";
             header_to_register();
@@ -78,51 +66,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
 
-        if (strlen($_POST['login']) >= 3 && strlen($_POST['login']) <= 20 && preg_match($pattern_login, $_POST['surname']) == 0) {
-            $sql = "SELECT `login` FROM `users` WHERE `login` = :login";
-            $stmt = $conn->prepare($sql);
-            $row = $stmt->execute([':login' => $_POST['login']]);
+        if (!isset($_GET['upd'])) {
+            if (strlen($_POST['login']) >= 3 && strlen($_POST['login']) <= 20 && preg_match($pattern_login, $_POST['surname']) == 0) {
+                $sql = "SELECT `login` FROM `users` WHERE `login` = :login";
+                $stmt = $conn->prepare($sql);
+                $row = $stmt->execute([':login' => $_POST['login']]);
 
-            if (isset($_GET['upd'])) {
-                $sql_upd = "SELECT `login` FROM `users` WHERE `login` = :login"; // запис з БД по $_SESSION['login']]
-                $stmt_upd = $conn->prepare($sql_upd);
-                $row_upd = $stmt_upd->execute([':login' => $_SESSION['login']]);
-            }
-
-            if (($stmt->rowCount() == 0 && !isset($_GET['upd'])) || //новий користувач
-                ($stmt->rowCount() == 1 && isset($_GET['upd']) && $stmt->fetch()['login'] == $stmt_upd->fetch()['login'])) // редагування
-                $user_login = $_POST['login'];
-            elseif (($stmt->rowCount() == 1 && !isset($_GET['upd'])) || // пошта зайнята (для нового користувача)
-                ($stmt->rowCount() == 1 && isset($_GET['upd']) && $stmt->fetch()['login'] != $stmt_upd->fetch()['login'])) { // пошта зайнята (для користувача, який редагує профіль. Пошти не співпадають)
-                echo "<h1>Користувач з таким логіном вже зареєстрований!</h1>";
-                echo "<a href='../pages/index.php'>На головну</a>";
-                exit;
-            } elseif ($stmt->rowCount() == 0 && isset($_GET['upd'])) { // зміна пошти при редагуванні
-                echo "<h1>Неможливо редагувати логін!</h1>";
-                echo "<a href='../pages/form_register.php?upd=1'>До реєстрації</a>";
+                if ($stmt->rowCount() == 0)
+                    $user_login = $_POST['login'];
+                else {
+                    echo "<h1>Вже існує користувач з таким логіном!</h1>";
+                    header_to_register();
+                    exit;
+                }
+            } else {
+                echo "<h1>Некорректний логін! Спробуйте ще раз</h1>";
+                echo "<h4><span style='color: red'>Перевірте, чи Ваш логін не містить недопустимих символів (цифри, пробіли, знаки пунктуації, тощо).</span></h4>";
+                echo "<a href='../pages/form_register.php'>До реєстрації</a>";
                 exit;
             }
-
-
-            /*if (($stmt->rowCount() == 0 && !isset($_GET['upd'])) || ($stmt->rowCount() == 1 && isset($_GET['upd'])))
-                $user_login = $_POST['login'];
-            else {
-                echo "<h1>Вже існує користувач з таким логіном!</h1>";
-                header_to_register();
-                exit;
-            }*/
-        } else {
-
-            echo "<h1>Некорректний логін! Спробуйте ще раз</h1>";
-            echo "<h4><span style='color: red'>Перевірте, чи Ваш логін не містить недопустимих символів (цифри, пробіли, знаки пунктуації, тощо).</span></h4>";
-            header_to_register();
-            exit;
         }
 
 
         if (strlen($_POST['password']) >= 6 && strlen($_POST['password']) <= 16)
             $user_password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-
         else {
             echo "<h1>Некорректна довжина паролю! Спробуйте ще раз</h1>";
             header_to_register();
@@ -130,13 +97,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
 
-        if (isset($_GET['upd']))
-            $sql = "UPDATE `users` SET login = :u_login, password = :u_password, name = :u_name, surname = :u_surname, age = :u_age, email = :u_email";
-        else
+        if (isset($_GET['upd'])) {
+            $sql = "UPDATE `users` SET password = :u_password, name = :u_name, surname = :u_surname, age = :u_age";
+            $execute_values = [':u_password' => $user_password, ':u_name' => $user_name,
+                ':u_surname' => $user_surname, ':u_age' => $user_age];
+        } else {
             $sql = "INSERT INTO `users` (login, password, name, surname, age, email) VALUES (:u_login, :u_password, :u_name, :u_surname, :u_age, :u_email)";
+            $execute_values = [':u_login' => $user_login, ':u_password' => $user_password, ':u_name' => $user_name,
+                ':u_surname' => $user_surname, ':u_age' => $user_age, ':u_email' => $user_email];
+        }
         $stmt = $conn->prepare($sql);
-        $stmt->execute([':u_login' => $user_login, ':u_password' => $user_password, ':u_name' => $user_name,
-            ':u_surname' => $user_surname, ':u_age' => $user_age, ':u_email' => $user_email]);
+        $stmt->execute($execute_values);
 
         if (isset($_GET['upd'])) {
             echo "<h1>Дані успішно змінені!</h1>";
