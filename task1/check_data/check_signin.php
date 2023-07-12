@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute([':u_login' => $_POST['login']]);
         if (password_verify($_POST['password'], $stmt->fetch()['password'])) {
-            $_SESSION['succesSignin'] = true;
             $_SESSION['login'] = $_POST['login'];
             header('Location: account.php');
         } else {

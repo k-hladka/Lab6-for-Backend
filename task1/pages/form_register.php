@@ -14,13 +14,15 @@ include_once "../dbsetting.php";
 </head>
 <body>
 <?php
-$disabled = "";
-$placeholder_email = "";
-$placeholder_login = "";
+$readonly = "";
+$value_email = "";
+$value_login = "";
 $button = "Зареєструватись";
+$action = "../check_data/check_register.php?";
+
 if (isset($_GET['upd'])) {
     $action = "../check_data/check_register.php?upd=1";
-    $disabled = "disabled";
+    $readonly = "readonly";
 
     try {
         $conn = new PDO("mysql: host=$servername; dbname=$dbname", $username, $password, $opt);
@@ -28,16 +30,15 @@ if (isset($_GET['upd'])) {
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute([':u_login' => $_SESSION['login']]);
 
-        $placeholder_email = $stmt->fetch()['email'];
-        $placeholder_login = $_SESSION['login'];
+        $value_email = $stmt->fetch()['email'];
+        $value_login = $_SESSION['login'];
         $button = "Внести зміни";
     } catch (PDOException $e) {
         echo $e->getMessage();
     }
 
-} else
-    $action = "../check_data/check_register.php?";
-?>
+} ?>
+
 <form action= <?= $action; ?> name="register" method="post">
     <div>
         <label for="name">Ім'я:
@@ -50,12 +51,12 @@ if (isset($_GET['upd'])) {
     <div>
         <label for="email">Пошта:
             <input type="email" name="email" min="4" max="256" required
-                   placeholder=<?= $placeholder_email; ?> <?= $disabled; ?>>
+                   value=<?= $value_email; ?> <?= $readonly; ?>>
     </div>
     <div>
         <label for="login">Логін:
             <input type="text" name="login" required minlength="6" maxlength="20"
-                   placeholder=<?= $placeholder_login; ?> <?= $disabled; ?>>
+                   value=<?= $value_login; ?> <?= $readonly; ?>>
     </div>
     <div>
         <label for="password">Пароль:
