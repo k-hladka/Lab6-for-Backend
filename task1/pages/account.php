@@ -11,8 +11,8 @@ try {
     echo "<h2>Привіт, ". $stmt->fetch()['name'] ."!</h2><hr>
           <a href='account_data.php'>Переглянути свої дані</a><br>
           <a href='form_register.php?upd=1'>Редагувати свої дані</a><br>
-          <a href='#'>Вийти з профілю</a><br>
-          <a href='#'>Видалити профіль</a><br>";
+          <a href='exit.php'>Вийти з профілю</a><br>
+          <a href='delete.php'>Видалити профіль</a><br>";
 } catch (PDOException $e) {
     echo $e->getMessage();
 }

@@ -72,7 +72,7 @@ if (isset($_GET['upd'])) {
     <div>
         <?php
         if (isset($_GET['upd']))
-            echo "<a href='account.php'>Повернутись</a><p style='color: red'>При поверненні до профілю внесенні дані не будуть збережені</p>";
+            echo "<a href='account.php' title='При поверненні до профілю внесенні дані не будуть збережені'>Повернутись</a>";
         else
             echo "<p>Вже зареєстровані? <a href='index.php'>На головну</a></p>";
         ?>
