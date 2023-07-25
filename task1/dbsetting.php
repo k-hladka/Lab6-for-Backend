@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = '';
+$username = "lab12";
+$password = 'IDD_30)a3owHQTCN';
 $dbname = "lab12";
 $opt = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

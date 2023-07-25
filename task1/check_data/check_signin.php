@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ../pages/account.php');
         } else {
             echo "<h1>Некорректний логін або пароль! Спробуйте ще раз</h1>";
-            echo "<a href='../pages/index.php'>Повернутись на головну</a>";
+            echo "<a href='../index.php'>Повернутись на головну</a>";
             exit;
         }
     } catch (PDOException $e) {

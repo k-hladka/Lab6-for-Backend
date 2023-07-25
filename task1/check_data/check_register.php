@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $user_email = $_POST['email'];
                 else {
                     echo "<h1>Користувач з такою поштою вже зареєстрований!</h1>";
-                    echo "<a href='../pages/index.php'>На головну</a>";
+                    echo "<a href='../index.php'>На головну</a>";
                     exit;
                 }
 
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else
             echo "<h1>Реєстрація пройшла успішно!</h1>";
 
-        echo "<a href='../pages/index.php'>На головну</a>";
+        echo "<a href='../index.php'>На головну</a>";
 
     } catch (PDOException $e) {
         print $e->getMessage();

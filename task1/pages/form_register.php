@@ -74,7 +74,7 @@ if (isset($_GET['upd'])) {
         if (isset($_GET['upd']))
             echo "<a href='account.php' title='При поверненні до профілю внесенні дані не будуть збережені'>Повернутись</a>";
         else
-            echo "<p>Вже зареєстровані? <a href='index.php'>На головну</a></p>";
+            echo "<p>Вже зареєстровані? <a href='../index.php'>На головну</a></p>";
         ?>
     </div>
 </form>

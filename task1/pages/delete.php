@@ -9,7 +9,7 @@ try {
     $res = $stmt->execute([':u_login' => $_SESSION['login']]);
 
     session_unset();
-    header('Location: index.php');
+    header('Location: ../index.php');
 } catch (PDOException $e) {
     echo $e->getMessage();
 }
